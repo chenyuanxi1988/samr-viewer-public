@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="反垄断案件数据库 — 查询全国市场监管总局反垄断执法案件信息">
+    <meta name="format-detection" content="telephone=no">
+    <title>反垄断案件数据库</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <span class="logo-icon">⚖️</span>
+                <div class="logo-text">
+                    <h1>反垄断案件数据库</h1>
+                    <p class="subtitle">SAMR Antitrust Case Database</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Dashboard -->
+    <section class="stats-section" id="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card stat-total">
+                <div class="stat-number" id="stat-total">—</div>
+                <div class="stat-label">案件总数</div>
+            </div>
+            <div class="stat-card stat-provinces">
+                <div class="stat-number" id="stat-provinces">—</div>
+                <div class="stat-label">数据来源</div>
+            </div>
+            <div class="stat-card stat-updated">
+                <div class="stat-number" id="stat-updated">—</div>
+                <div class="stat-label">最近更新</div>
+            </div>
+        </div>
+
+        <!-- Province Distribution -->
+        <div class="province-chart" id="province-chart">
+            <h3 class="chart-title">省份分布</h3>
+            <div class="chart-bars" id="chart-bars"></div>
+        </div>
+    </section>
+
+    <!-- Search & Filter Bar -->
+    <section class="search-section">
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="搜索案件标题…" autocomplete="off">
+            <button class="clear-btn" id="clear-btn" title="清除搜索">✕</button>
+        </div>
+        <div class="filter-row">
+            <select id="filter-province" class="filter-select">
+                <option value="">全部省份</option>
+            </select>
+            <select id="filter-category" class="filter-select">
+                <option value="">全部类型</option>
+            </select>
+        </div>
+        <div class="result-count" id="result-count"></div>
+    </section>
+
+    <!-- Case List -->
+    <section class="case-list" id="case-list">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>加载案件数据中…</p>
+        </div>
+    </section>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+
+    <!-- Upsell Banner -->
+    <section class="upsell-banner">
+        <div class="upsell-content">
+            <span class="upsell-icon">🔒</span>
+            <p><strong>需要下载处罚决定书原文？</strong></p>
+            <p class="upsell-desc">完整版提供 Word/PDF 附件下载、案件正文预览等高级功能</p>
+            <p class="upsell-contact">关注公众号回复「完整版」了解详情</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>数据来源：国家市场监督管理总局及各省级市场监管局公开信息</p>
+        <p class="footer-disclaimer">本工具仅供法律研究参考，不构成法律意见</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
