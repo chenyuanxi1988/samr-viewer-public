@@ -28,8 +28,10 @@
 
     // --- DOM refs ---
     const $statTotal = document.getElementById("stat-total");
-    const $statProvinces = document.getElementById("stat-provinces");
     const $statUpdated = document.getElementById("stat-updated");
+    const $statJyaj = document.getElementById("stat-jyaj");
+    const $statXzcf = document.getElementById("stat-xzcf");
+    const $statFtj = document.getElementById("stat-ftj");
     const $chartBars = document.getElementById("chart-bars");
     const $searchInput = document.getElementById("search-input");
     const $clearBtn = document.getElementById("clear-btn");
@@ -73,10 +75,15 @@
     // =============================
 
     function renderStats(stats) {
-        // Animate number count-up
+        // Total + date
         animateNumber($statTotal, stats.total);
-        $statProvinces.textContent = Object.keys(stats.by_province).length + " 个省份";
         $statUpdated.textContent = stats.last_updated || "—";
+
+        // Category breakdown
+        const cats = stats.by_category || {};
+        animateNumber($statJyaj, cats["简易案件公示"] || 0);
+        animateNumber($statXzcf, cats["行政处罚案件"] || 0);
+        animateNumber($statFtj, cats["附条件批准/禁止"] || 0);
 
         // Province bar chart
         const maxCount = Math.max(...Object.values(stats.by_province));
@@ -209,7 +216,7 @@
             card.rel = "noopener noreferrer";
 
             const categoryLabel = CATEGORY_MAP[c.category] || c.category;
-            const dateStr = c.date || "日期未知";
+            const dateStr = c.date || "—";
 
             card.innerHTML = `
                 <div class="case-title">${escapeHtml(c.title)}</div>
