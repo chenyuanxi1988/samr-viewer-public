@@ -12,11 +12,34 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <!-- 加入版本时间戳参数强制破除浏览器对样式表的缓存 -->
+    <link rel="stylesheet" href="style.css?v=20261119_v2">
+    <!-- 关键布局内联兜底：保证无论浏览器是否缓存外部CSS，均100%生效全屏自适应与紧凑排版 -->
+    <style>
+        .header-inner, .main-container, .footer {
+            max-width: 1280px !important;
+            width: 100% !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        @media (min-width: 900px) {
+            .case-list {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+                max-width: 100% !important;
+            }
+            .search-filter-row {
+                display: flex !important;
+                flex-direction: row !important;
+                gap: 10px !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Header -->
+    <!-- 顶部导航与团队背书 -->
     <header class="header">
         <div class="header-inner">
             <div class="logo">
@@ -27,47 +50,48 @@
                 </div>
             </div>
             <div class="header-badge">
-                <span class="lawyer-tag">合规与反垄断业务团队</span>
+                <span class="lawyer-tag">海华永泰合规与反垄断业务团队</span>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- 主工作区 -->
     <main class="main-container">
-        <!-- 紧凑型统计概览条 (桌面1行4列，移动端2x2) -->
-        <section class="stats-section" id="stats-section">
-            <div class="stats-grid">
-                <div class="stat-card stat-total-card">
-                    <div class="stat-number" id="stat-total">—</div>
-                    <div class="stat-label">
-                        <span>案件总数</span>
-                        <span class="stat-updated-tag">更新于 <span id="stat-updated">—</span></span>
-                    </div>
+        <!-- 1. 超紧凑极简数据微栏 (取代原先臃肿的大方块卡片，高集成度单行排版) -->
+        <section class="metrics-ribbon-section">
+            <div class="metrics-ribbon">
+                <div class="metric-item">
+                    <span class="metric-val" id="stat-total">—</span>
+                    <span class="metric-name">收录案件</span>
                 </div>
-                <div class="stat-card stat-cat-jyaj">
-                    <div class="stat-number" id="stat-jyaj">—</div>
-                    <div class="stat-label">简易案件公示</div>
+                <span class="metric-sep">/</span>
+                <div class="metric-item">
+                    <span class="metric-val cat-jyaj" id="stat-jyaj">—</span>
+                    <span class="metric-name">简易案件</span>
                 </div>
-                <div class="stat-card stat-cat-xzcf">
-                    <div class="stat-number" id="stat-xzcf">—</div>
-                    <div class="stat-label">行政处罚决定</div>
+                <span class="metric-sep">/</span>
+                <div class="metric-item">
+                    <span class="metric-val cat-xzcf" id="stat-xzcf">—</span>
+                    <span class="metric-name">行政处罚</span>
                 </div>
-                <div class="stat-card stat-cat-ftj">
-                    <div class="stat-number" id="stat-ftj">—</div>
-                    <div class="stat-label">附条件批准/禁止</div>
+                <span class="metric-sep">/</span>
+                <div class="metric-item">
+                    <span class="metric-val cat-ftj" id="stat-ftj">—</span>
+                    <span class="metric-name">附条件批准</span>
                 </div>
+                <div class="metric-updated">数据更新于 <span id="stat-updated">—</span></div>
             </div>
 
-            <!-- 省份快捷胶囊筛选与图表折叠区 -->
+            <!-- 2. 省份紧凑胶囊快速筛选 (横向紧凑微徽章，秒级直达过滤) -->
             <div class="province-bar-wrapper">
                 <div class="province-header-row">
-                    <span class="province-header-title">🏛️ 地区分布 (点击快捷筛选):</span>
-                    <button class="toggle-chart-btn" id="toggle-chart-btn" type="button">
-                        <span id="chart-btn-text">查看图表 ▾</span>
+                    <span class="province-header-title">🏛️ 地区分布:</span>
+                    <div class="province-chips" id="province-chips">
+                        <!-- 由 app.js 动态填充 -->
+                    </div>
+                    <button class="toggle-chart-btn" id="toggle-chart-btn" type="button" title="展开/收起柱状图">
+                        <span id="chart-btn-text">图表 ▾</span>
                     </button>
-                </div>
-                <div class="province-chips" id="province-chips">
-                    <!-- 由 app.js 动态填充 -->
                 </div>
                 <div class="province-chart-drawer" id="province-chart-drawer" style="display: none;">
                     <div class="province-chart" id="province-chart">
@@ -77,58 +101,81 @@
             </div>
         </section>
 
-        <!-- 搜索与筛选工具栏 (桌面单行横排，移动端自适应) -->
+        <!-- 3. 搜索与排序工具栏 (桌面端整齐单行横排，移动端自适应) -->
         <section class="search-section">
             <div class="search-filter-row">
                 <div class="search-bar">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="search-input" placeholder="输入企业名称、案由等搜索案件…" autocomplete="off">
+                    <input type="text" id="search-input" placeholder="输入企业名称、案由、行业搜索案件…" autocomplete="off">
                     <button class="clear-btn" id="clear-btn" title="清除搜索">✕</button>
                 </div>
                 <div class="filter-controls">
-                    <select id="filter-province" class="filter-select">
+                    <select id="filter-province" class="filter-select" title="按受托省局筛选">
                         <option value="">全部省份</option>
                     </select>
-                    <select id="filter-category" class="filter-select">
+                    <select id="filter-category" class="filter-select" title="按案件类型筛选">
                         <option value="">全部类型</option>
                     </select>
-                    <button class="reset-filter-btn" id="reset-filter-btn" title="重置全部筛选">重置</button>
+                    <select id="filter-sort" class="filter-select" title="排序规则">
+                        <option value="date_desc">发布日期 ↓ (最新)</option>
+                        <option value="date_asc">发布日期 ↑ (最早)</option>
+                        <option value="title_asc">案件标题 A-Z</option>
+                    </select>
+                    <button class="reset-filter-btn" id="reset-filter-btn" title="重置全部筛选与排序">重置</button>
                 </div>
             </div>
             <div class="result-count" id="result-count"></div>
         </section>
 
-        <!-- 案件列表 (桌面自适应双列，移动端单列) -->
+        <!-- 4. 案件列表 (电脑端双列自适应网格，手机端单列流) -->
         <section class="case-list-section">
             <div class="case-list" id="case-list">
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>加载案件数据中…</p>
+                    <p>正在加载反垄断案件数据…</p>
                 </div>
             </div>
         </section>
 
-        <!-- 分页器 -->
+        <!-- 5. 分页器 -->
         <div class="pagination" id="pagination"></div>
 
-        <!-- 专业服务与完整数据库 Banner -->
-        <section class="upsell-banner">
+        <!-- 6. 业务咨询与专业合作 Banner -->
+        <section class="upsell-banner" id="contact-banner">
             <div class="upsell-content">
                 <span class="upsell-icon">⚖️</span>
-                <p><strong>海华永泰律师事务所 · 反垄断与竞争法专业团队</strong></p>
-                <p class="upsell-desc">本公开版收录案件公示速览；完整内网系统支持 Word/PDF 处罚决定书全文解析、附件下载与多维检索</p>
-                <p class="upsell-contact">陈元熹律师团队业务咨询与数据合作交流，欢迎联系关注</p>
+                <h3>海华永泰律师事务所 · 陈元熹律师团队</h3>
+                <p class="upsell-tagline">专业专注：反垄断审查申报 · 经营者集中合规 · 竞争合规体系搭建 · 反垄断调查与诉讼代理</p>
+                
+                <div class="contact-channels">
+                    <a href="mailto:chenyuanxi@hiwayslaw.com" class="contact-card-btn" id="email-contact-btn">
+                        <span class="btn-icon">✉️</span>
+                        <div class="btn-text">
+                            <span class="btn-label">业务咨询邮箱</span>
+                            <span class="btn-val" id="display-email">chenyuanxi@hiwayslaw.com</span>
+                        </div>
+                    </a>
+                    <div class="contact-card-btn wechat-channel" id="wechat-contact-btn">
+                        <span class="btn-icon">📱</span>
+                        <div class="btn-text">
+                            <span class="btn-label">微信业务交流 / 公众号</span>
+                            <span class="btn-val" id="display-wechat">关注陈元熹律师微信团队</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="upsell-desc">如需完整版内网数据库（支持 Word/PDF 处罚决定书全文解析、附件打包下载及多维交叉检索），欢迎随时联系交流。</p>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
+    <!-- 底栏 -->
     <footer class="footer">
         <p>数据来源：国家市场监督管理总局及各省级市场监管局公开信息</p>
-        <p class="footer-disclaimer">反垄断数据库 · 海华永泰律师事务所 陈元熹律师 | 本工具仅供反垄断与竞争法学术及合规研究参考</p>
+        <p class="footer-disclaimer">反垄断数据库 · 海华永泰律师事务所 陈元熹律师团队版权所有 | 本工具仅供学术及反垄断合规研究参考</p>
     </footer>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=20261119_v2"></script>
 </body>
 
 </html>

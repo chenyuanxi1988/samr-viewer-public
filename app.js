@@ -1,10 +1,10 @@
 /**
  * SAMR Public Viewer — Frontend Logic
  * ====================================
- * 反垄断数据库 | 海华永泰 陈元熹律师
+ * 反垄断数据库 | 海华永泰 陈元熹律师团队
  * Pure vanilla JS. Loads public_data.json + stats.json,
  * renders a responsive case list with client-side
- * search, filter, province chips, and pagination.
+ * search, filter, sorting, province chips, and pagination.
  */
 
 (function () {
@@ -43,6 +43,7 @@
     const $clearBtn = document.getElementById("clear-btn");
     const $filterProvince = document.getElementById("filter-province");
     const $filterCategory = document.getElementById("filter-category");
+    const $filterSort = document.getElementById("filter-sort");
     const $resetFilterBtn = document.getElementById("reset-filter-btn");
     const $resultCount = document.getElementById("result-count");
     const $caseList = document.getElementById("case-list");
@@ -74,7 +75,7 @@
         } catch (err) {
             if ($loading) {
                 $loading.innerHTML =
-                    '<p style="color: var(--accent-red);">加载失败，请刷新重试</p>';
+                    '<p style="color: var(--accent-red);">数据加载失败，请刷新重试</p>';
             }
             console.error("Data load error:", err);
         }
@@ -95,7 +96,7 @@
         animateNumber($statXzcf, cats["行政处罚案件"] || 0);
         animateNumber($statFtj, cats["附条件批准/禁止"] || 0);
 
-        // Province bar chart (if element exists)
+        // Province bar chart (if drawer is expanded)
         if ($chartBars && stats.by_province) {
             const maxCount = Math.max(...Object.values(stats.by_province));
             $chartBars.innerHTML = "";
@@ -119,7 +120,7 @@
                     setTimeout(() => {
                         const fillEl = row.querySelector(".chart-bar-fill");
                         if (fillEl) fillEl.style.width = pct + "%";
-                    }, 50 + i * 40);
+                    }, 50 + i * 35);
                 });
                 i++;
             }
@@ -186,7 +187,7 @@
     }
 
     // =============================
-    //  Filters
+    //  Filters & Sorting
     // =============================
 
     function populateFilters(stats) {
@@ -213,12 +214,26 @@
         const query = $searchInput ? $searchInput.value.trim().toLowerCase() : "";
         const province = $filterProvince ? $filterProvince.value : "";
         const category = $filterCategory ? $filterCategory.value : "";
+        const sortBy = $filterSort ? $filterSort.value : "date_desc";
 
+        // Filter
         filteredCases = allCases.filter((c) => {
             if (query && !c.title.toLowerCase().includes(query)) return false;
             if (province && c.province !== province) return false;
             if (category && c.category !== category) return false;
             return true;
+        });
+
+        // Sort
+        filteredCases.sort((a, b) => {
+            if (sortBy === "date_asc") {
+                return (a.date || "").localeCompare(b.date || "");
+            } else if (sortBy === "title_asc") {
+                return (a.title || "").localeCompare(b.title || "", "zh-CN");
+            } else {
+                // default date_desc
+                return (b.date || "").localeCompare(a.date || "");
+            }
         });
 
         currentPage = 1;
@@ -232,6 +247,7 @@
         }
         if ($filterProvince) $filterProvince.value = "";
         if ($filterCategory) $filterCategory.value = "";
+        if ($filterSort) $filterSort.value = "date_desc";
         updateProvinceChipsActive("");
         applyFilters();
     }
@@ -294,7 +310,7 @@
             return;
         }
 
-        // Render case cards
+        // Render case cards (2-column grid on desktop)
         const fragment = document.createDocumentFragment();
         pageCases.forEach((c) => {
             const card = document.createElement("a");
@@ -423,6 +439,10 @@
         $filterCategory.addEventListener("change", applyFilters);
     }
 
+    if ($filterSort) {
+        $filterSort.addEventListener("change", applyFilters);
+    }
+
     if ($resetFilterBtn) {
         $resetFilterBtn.addEventListener("click", resetAllFilters);
     }
@@ -433,7 +453,7 @@
             const isHidden = $chartDrawer.style.display === "none";
             $chartDrawer.style.display = isHidden ? "block" : "none";
             if ($chartBtnText) {
-                $chartBtnText.textContent = isHidden ? "收起图表 ▴" : "查看图表 ▾";
+                $chartBtnText.textContent = isHidden ? "收起图表 ▴" : "图表 ▾";
             }
         });
     }
