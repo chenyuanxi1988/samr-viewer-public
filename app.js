@@ -1,9 +1,10 @@
 /**
  * SAMR Public Viewer — Frontend Logic
  * ====================================
+ * 反垄断数据库 | 海华永泰 陈元熹律师
  * Pure vanilla JS. Loads public_data.json + stats.json,
- * renders a mobile-optimized case list with client-side
- * search, filter, and pagination.
+ * renders a responsive case list with client-side
+ * search, filter, province chips, and pagination.
  */
 
 (function () {
@@ -25,6 +26,7 @@
     let allCases = [];
     let filteredCases = [];
     let currentPage = 1;
+    let statsData = null;
 
     // --- DOM refs ---
     const $statTotal = document.getElementById("stat-total");
@@ -33,10 +35,15 @@
     const $statXzcf = document.getElementById("stat-xzcf");
     const $statFtj = document.getElementById("stat-ftj");
     const $chartBars = document.getElementById("chart-bars");
+    const $provinceChips = document.getElementById("province-chips");
+    const $toggleChartBtn = document.getElementById("toggle-chart-btn");
+    const $chartBtnText = document.getElementById("chart-btn-text");
+    const $chartDrawer = document.getElementById("province-chart-drawer");
     const $searchInput = document.getElementById("search-input");
     const $clearBtn = document.getElementById("clear-btn");
     const $filterProvince = document.getElementById("filter-province");
     const $filterCategory = document.getElementById("filter-category");
+    const $resetFilterBtn = document.getElementById("reset-filter-btn");
     const $resultCount = document.getElementById("result-count");
     const $caseList = document.getElementById("case-list");
     const $loading = document.getElementById("loading");
@@ -56,28 +63,31 @@
             if (!casesRes.ok || !statsRes.ok) throw new Error("Failed to fetch data");
 
             allCases = await casesRes.json();
-            const stats = await statsRes.json();
+            statsData = await statsRes.json();
 
-            renderStats(stats);
-            populateFilters(stats);
+            renderStats(statsData);
+            populateFilters(statsData);
+            renderProvinceChips(statsData);
             applyFilters();
 
-            $loading.style.display = "none";
+            if ($loading) $loading.style.display = "none";
         } catch (err) {
-            $loading.innerHTML =
-                '<p style="color: var(--accent-red);">加载失败，请刷新重试</p>';
+            if ($loading) {
+                $loading.innerHTML =
+                    '<p style="color: var(--accent-red);">加载失败，请刷新重试</p>';
+            }
             console.error("Data load error:", err);
         }
     }
 
     // =============================
-    //  Stats Rendering
+    //  Stats & Charts Rendering
     // =============================
 
     function renderStats(stats) {
         // Total + date
         animateNumber($statTotal, stats.total);
-        $statUpdated.textContent = stats.last_updated || "—";
+        if ($statUpdated) $statUpdated.textContent = stats.last_updated || "—";
 
         // Category breakdown
         const cats = stats.by_category || {};
@@ -85,36 +95,86 @@
         animateNumber($statXzcf, cats["行政处罚案件"] || 0);
         animateNumber($statFtj, cats["附条件批准/禁止"] || 0);
 
-        // Province bar chart
-        const maxCount = Math.max(...Object.values(stats.by_province));
-        $chartBars.innerHTML = "";
-        let i = 0;
-        for (const [province, count] of Object.entries(stats.by_province)) {
-            const pct = Math.max((count / maxCount) * 100, 8);
-            const row = document.createElement("div");
-            row.className = "chart-bar-row";
-            row.innerHTML = `
-                <span class="chart-bar-label">${province}</span>
-                <div class="chart-bar-track">
-                    <div class="chart-bar-fill bar-color-${i % 6}"
-                         style="width: 0%"
-                         data-count="${count}"></div>
-                </div>
-            `;
-            $chartBars.appendChild(row);
+        // Province bar chart (if element exists)
+        if ($chartBars && stats.by_province) {
+            const maxCount = Math.max(...Object.values(stats.by_province));
+            $chartBars.innerHTML = "";
+            let i = 0;
+            for (const [province, count] of Object.entries(stats.by_province)) {
+                const pct = Math.max((count / maxCount) * 100, 8);
+                const row = document.createElement("div");
+                row.className = "chart-bar-row";
+                row.innerHTML = `
+                    <span class="chart-bar-label">${province}</span>
+                    <div class="chart-bar-track">
+                        <div class="chart-bar-fill bar-color-${i % 6}"
+                             style="width: 0%"
+                             data-count="${count}"></div>
+                    </div>
+                `;
+                $chartBars.appendChild(row);
 
-            // Animate bar width
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    row.querySelector(".chart-bar-fill").style.width = pct + "%";
-                }, 100 + i * 80);
-            });
-            i++;
+                // Animate bar width
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        const fillEl = row.querySelector(".chart-bar-fill");
+                        if (fillEl) fillEl.style.width = pct + "%";
+                    }, 50 + i * 40);
+                });
+                i++;
+            }
         }
     }
 
+    function renderProvinceChips(stats) {
+        if (!$provinceChips || !stats.by_province) return;
+
+        $provinceChips.innerHTML = "";
+
+        // "全部" Chip
+        const allChip = document.createElement("button");
+        allChip.className = "province-chip active";
+        allChip.type = "button";
+        allChip.dataset.province = "";
+        allChip.innerHTML = `全部 <span class="chip-count">(${stats.total || 0})</span>`;
+        allChip.addEventListener("click", () => selectProvinceChip(""));
+        $provinceChips.appendChild(allChip);
+
+        // Province Chips
+        for (const [province, count] of Object.entries(stats.by_province)) {
+            const chip = document.createElement("button");
+            chip.className = "province-chip";
+            chip.type = "button";
+            chip.dataset.province = province;
+            chip.innerHTML = `${province} <span class="chip-count">(${count})</span>`;
+            chip.addEventListener("click", () => selectProvinceChip(province));
+            $provinceChips.appendChild(chip);
+        }
+    }
+
+    function selectProvinceChip(province) {
+        if ($filterProvince) {
+            $filterProvince.value = province;
+        }
+        updateProvinceChipsActive(province);
+        applyFilters();
+    }
+
+    function updateProvinceChipsActive(province) {
+        if (!$provinceChips) return;
+        const chips = $provinceChips.querySelectorAll(".province-chip");
+        chips.forEach((c) => {
+            if (c.dataset.province === province) {
+                c.classList.add("active");
+            } else {
+                c.classList.remove("active");
+            }
+        });
+    }
+
     function animateNumber(el, target) {
-        const duration = 800;
+        if (!el) return;
+        const duration = 600;
         const start = performance.now();
         const tick = (now) => {
             const progress = Math.min((now - start) / duration, 1);
@@ -130,27 +190,29 @@
     // =============================
 
     function populateFilters(stats) {
-        // Province filter
-        for (const province of Object.keys(stats.by_province)) {
-            const opt = document.createElement("option");
-            opt.value = province;
-            opt.textContent = province;
-            $filterProvince.appendChild(opt);
+        if ($filterProvince && stats.by_province) {
+            for (const province of Object.keys(stats.by_province)) {
+                const opt = document.createElement("option");
+                opt.value = province;
+                opt.textContent = province;
+                $filterProvince.appendChild(opt);
+            }
         }
 
-        // Category filter
-        for (const [code, name] of Object.entries(CATEGORY_MAP)) {
-            const opt = document.createElement("option");
-            opt.value = code;
-            opt.textContent = name;
-            $filterCategory.appendChild(opt);
+        if ($filterCategory) {
+            for (const [code, name] of Object.entries(CATEGORY_MAP)) {
+                const opt = document.createElement("option");
+                opt.value = code;
+                opt.textContent = name;
+                $filterCategory.appendChild(opt);
+            }
         }
     }
 
     function applyFilters() {
-        const query = $searchInput.value.trim().toLowerCase();
-        const province = $filterProvince.value;
-        const category = $filterCategory.value;
+        const query = $searchInput ? $searchInput.value.trim().toLowerCase() : "";
+        const province = $filterProvince ? $filterProvince.value : "";
+        const category = $filterCategory ? $filterCategory.value : "";
 
         filteredCases = allCases.filter((c) => {
             if (query && !c.title.toLowerCase().includes(query)) return false;
@@ -161,6 +223,17 @@
 
         currentPage = 1;
         renderResults();
+    }
+
+    function resetAllFilters() {
+        if ($searchInput) {
+            $searchInput.value = "";
+            if ($clearBtn) $clearBtn.classList.remove("visible");
+        }
+        if ($filterProvince) $filterProvince.value = "";
+        if ($filterCategory) $filterCategory.value = "";
+        updateProvinceChipsActive("");
+        applyFilters();
     }
 
     // Debounce helper
@@ -176,6 +249,18 @@
     //  Results Rendering
     // =============================
 
+    function highlightMatch(text, query) {
+        const escaped = escapeHtml(text);
+        if (!query) return escaped;
+        const qEscaped = escapeRegex(query);
+        const regex = new RegExp(`(${qEscaped})`, "gi");
+        return escaped.replace(regex, "<mark>$1</mark>");
+    }
+
+    function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
     function renderResults() {
         const total = filteredCases.length;
         const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -185,24 +270,27 @@
         const pageCases = filteredCases.slice(startIdx, startIdx + PAGE_SIZE);
 
         // Result count
-        const query = $searchInput.value.trim();
-        if (query || $filterProvince.value || $filterCategory.value) {
-            $resultCount.textContent = `找到 ${total} 个结果`;
-        } else {
-            $resultCount.textContent = "";
+        const query = $searchInput ? $searchInput.value.trim() : "";
+        if ($resultCount) {
+            if (query || ($filterProvince && $filterProvince.value) || ($filterCategory && $filterCategory.value)) {
+                $resultCount.textContent = `匹配 ${total.toLocaleString()} 篇案件数据`;
+            } else {
+                $resultCount.textContent = `共收录 ${total.toLocaleString()} 篇案件`;
+            }
         }
 
         // Clear list
+        if (!$caseList) return;
         $caseList.innerHTML = "";
 
         if (pageCases.length === 0) {
             $caseList.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-icon">📭</div>
-                    <div class="empty-text">暂无匹配案件</div>
+                    <div class="empty-text">未检索到匹配案件，请尝试缩减关键词或重置筛选</div>
                 </div>
             `;
-            $pagination.innerHTML = "";
+            if ($pagination) $pagination.innerHTML = "";
             return;
         }
 
@@ -217,14 +305,15 @@
 
             const categoryLabel = CATEGORY_MAP[c.category] || c.category;
             const dateStr = c.date || "—";
+            const highlightedTitle = highlightMatch(c.title, query);
 
             card.innerHTML = `
-                <div class="case-title">${escapeHtml(c.title)}</div>
+                <div class="case-title">${highlightedTitle}</div>
                 <div class="case-meta">
-                    <span class="case-tag tag-date">${dateStr}</span>
-                    <span class="case-tag tag-province">${escapeHtml(c.province)}</span>
-                    <span class="case-tag tag-category">${categoryLabel}</span>
-                    <span class="case-link-hint">查看原文 ›</span>
+                    <span class="case-tag tag-date">📅 ${dateStr}</span>
+                    <span class="case-tag tag-province">🏛️ ${escapeHtml(c.province)}</span>
+                    <span class="case-tag tag-category">⚖️ ${categoryLabel}</span>
+                    <span class="case-link-hint">查看官网原文 ↗</span>
                 </div>
             `;
             fragment.appendChild(card);
@@ -236,11 +325,12 @@
     }
 
     function renderPagination(totalPages) {
+        if (!$pagination) return;
         $pagination.innerHTML = "";
         if (totalPages <= 1) return;
 
         // Prev button
-        addPageBtn("‹", currentPage > 1, () => goPage(currentPage - 1));
+        addPageBtn("◀ 上一页", currentPage > 1, () => goPage(currentPage - 1));
 
         // Page numbers with smart truncation
         const pages = getPaginationRange(currentPage, totalPages);
@@ -256,7 +346,7 @@
         });
 
         // Next button
-        addPageBtn("›", currentPage < totalPages, () => goPage(currentPage + 1));
+        addPageBtn("下一页 ▶", currentPage < totalPages, () => goPage(currentPage + 1));
     }
 
     function addPageBtn(label, enabled, onClick, active = false) {
@@ -271,8 +361,11 @@
     function goPage(page) {
         currentPage = page;
         renderResults();
-        // Scroll to top of case list
-        $caseList.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Scroll to search section nicely
+        const searchEl = document.querySelector(".search-section");
+        if (searchEl) {
+            searchEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
     }
 
     function getPaginationRange(current, total) {
@@ -294,6 +387,7 @@
     // =============================
 
     function escapeHtml(str) {
+        if (!str) return "";
         const div = document.createElement("div");
         div.textContent = str;
         return div.innerHTML;
@@ -303,19 +397,46 @@
     //  Event Listeners
     // =============================
 
-    $searchInput.addEventListener("input", debounce(() => {
-        $clearBtn.classList.toggle("visible", $searchInput.value.length > 0);
-        applyFilters();
-    }, 200));
+    if ($searchInput) {
+        $searchInput.addEventListener("input", debounce(() => {
+            if ($clearBtn) $clearBtn.classList.toggle("visible", $searchInput.value.length > 0);
+            applyFilters();
+        }, 200));
+    }
 
-    $clearBtn.addEventListener("click", () => {
-        $searchInput.value = "";
-        $clearBtn.classList.remove("visible");
-        applyFilters();
-    });
+    if ($clearBtn) {
+        $clearBtn.addEventListener("click", () => {
+            if ($searchInput) $searchInput.value = "";
+            $clearBtn.classList.remove("visible");
+            applyFilters();
+        });
+    }
 
-    $filterProvince.addEventListener("change", applyFilters);
-    $filterCategory.addEventListener("change", applyFilters);
+    if ($filterProvince) {
+        $filterProvince.addEventListener("change", () => {
+            updateProvinceChipsActive($filterProvince.value);
+            applyFilters();
+        });
+    }
+
+    if ($filterCategory) {
+        $filterCategory.addEventListener("change", applyFilters);
+    }
+
+    if ($resetFilterBtn) {
+        $resetFilterBtn.addEventListener("click", resetAllFilters);
+    }
+
+    // Toggle chart drawer button
+    if ($toggleChartBtn && $chartDrawer) {
+        $toggleChartBtn.addEventListener("click", () => {
+            const isHidden = $chartDrawer.style.display === "none";
+            $chartDrawer.style.display = isHidden ? "block" : "none";
+            if ($chartBtnText) {
+                $chartBtnText.textContent = isHidden ? "收起图表 ▴" : "查看图表 ▾";
+            }
+        });
+    }
 
     // =============================
     //  Init
