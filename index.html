@@ -13,7 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- 加入版本时间戳参数强制破除浏览器对样式表的缓存 -->
-    <link rel="stylesheet" href="style.css?v=20261119_v3">
+    <link rel="stylesheet" href="style.css?v=20261119_v5">
     <!-- 关键布局内联兜底：保证无论浏览器是否缓存外部CSS，均100%生效全屏自适应与紧凑排版 -->
     <style>
         .header-inner, .main-container, .footer {
@@ -148,18 +148,33 @@
                 <p class="upsell-tagline">专业专注：反垄断审查申报 · 经营者集中合规 · 竞争合规体系搭建 · 反垄断调查与诉讼代理</p>
                 
                 <div class="contact-channels">
-                    <div class="contact-card-btn email-channel" id="email-contact-btn" title="点击发起邮件咨询 (已防垃圾邮件爬虫)">
-                        <span class="btn-icon">✉️</span>
-                        <div class="btn-text">
-                            <span class="btn-label">业务咨询邮箱</span>
-                            <span class="btn-val"><img src="email.png?v=20261119" alt="联系邮箱" class="email-img"></span>
+                    <!-- 邮箱联系卡片 -->
+                    <div class="contact-channel-card email-channel-card" id="email-contact-btn" title="点击直接发起邮件咨询">
+                        <div class="channel-card-header">
+                            <span class="channel-icon">✉️</span>
+                            <span class="channel-title">业务咨询邮箱</span>
+                        </div>
+                        <div class="channel-card-body">
+                            <img src="email.png?v=20261119" alt="yuanxi@hiwayslaw.com" class="email-img">
+                            <span class="email-action-hint">点击发送邮件咨询 ↗</span>
+                        </div>
+                        <div class="channel-card-footer">
+                            <span class="shield-badge">🛡️ 已启用防爬虫安全防护</span>
                         </div>
                     </div>
-                    <div class="contact-card-btn wechat-channel" id="wechat-contact-btn">
-                        <span class="btn-icon">📱</span>
-                        <div class="btn-text">
-                            <span class="btn-label">微信业务交流 / 公众号</span>
-                            <span class="btn-val" id="display-wechat">关注陈元熹律师微信团队</span>
+
+                    <!-- 微信公众号二维码卡片 -->
+                    <div class="contact-channel-card wechat-channel-card" id="wechat-qr-card">
+                        <div class="wechat-qr-box">
+                            <img src="wechat-qr.jpg?v=20261119" alt="陈元熹律师微信公众号二维码" class="wechat-qr-img">
+                        </div>
+                        <div class="wechat-info">
+                            <div class="channel-card-header">
+                                <span class="channel-icon">📱</span>
+                                <span class="channel-title">官方微信公众号</span>
+                            </div>
+                            <p class="wechat-desc">扫码关注 <strong>陈元熹律师团队</strong></p>
+                            <span class="wechat-hint">微信扫一扫 · 获取反垄断前沿资讯与案例合规解读</span>
                         </div>
                     </div>
                 </div>
