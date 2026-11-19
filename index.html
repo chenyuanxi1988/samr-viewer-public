@@ -13,7 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- 加入版本时间戳参数强制破除浏览器对样式表的缓存 -->
-    <link rel="stylesheet" href="style.css?v=20261119_v2">
+    <link rel="stylesheet" href="style.css?v=20261119_v3">
     <!-- 关键布局内联兜底：保证无论浏览器是否缓存外部CSS，均100%生效全屏自适应与紧凑排版 -->
     <style>
         .header-inner, .main-container, .footer {
@@ -148,13 +148,13 @@
                 <p class="upsell-tagline">专业专注：反垄断审查申报 · 经营者集中合规 · 竞争合规体系搭建 · 反垄断调查与诉讼代理</p>
                 
                 <div class="contact-channels">
-                    <a href="mailto:chenyuanxi@hiwayslaw.com" class="contact-card-btn" id="email-contact-btn">
+                    <div class="contact-card-btn email-channel" id="email-contact-btn" title="点击发起邮件咨询 (已防垃圾邮件爬虫)">
                         <span class="btn-icon">✉️</span>
                         <div class="btn-text">
                             <span class="btn-label">业务咨询邮箱</span>
-                            <span class="btn-val" id="display-email">chenyuanxi@hiwayslaw.com</span>
+                            <span class="btn-val"><img src="email.png?v=20261119" alt="联系邮箱" class="email-img"></span>
                         </div>
-                    </a>
+                    </div>
                     <div class="contact-card-btn wechat-channel" id="wechat-contact-btn">
                         <span class="btn-icon">📱</span>
                         <div class="btn-text">

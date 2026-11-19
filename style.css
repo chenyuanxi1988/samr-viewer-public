@@ -771,6 +771,15 @@ body {
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--accent-blue);
+    display: flex;
+    align-items: center;
+}
+
+.email-img {
+    height: 19px;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .upsell-desc {

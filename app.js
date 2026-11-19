@@ -458,6 +458,16 @@
         });
     }
 
+    // Anti-spam obfuscated email click (保护邮箱不被爬虫机器人采集)
+    const $emailBtn = document.getElementById("email-contact-btn");
+    if ($emailBtn) {
+        $emailBtn.addEventListener("click", () => {
+            const u = "yuanxi";
+            const d = "hiwayslaw.com";
+            window.location.href = `mailto:${u}@${d}?subject=${encodeURIComponent("反垄断业务咨询 - 陈元熹律师团队")}`;
+        });
+    }
+
     // =============================
     //  Init
     // =============================
