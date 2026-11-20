@@ -13,7 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- 加入版本时间戳参数强制破除浏览器对样式表的缓存 -->
-    <link rel="stylesheet" href="style.css?v=20261119_v5">
+    <link rel="stylesheet" href="style.css?v=20261120_v1">
     <!-- 关键布局内联兜底：保证无论浏览器是否缓存外部CSS，均100%生效全屏自适应与紧凑排版 -->
     <style>
         .header-inner, .main-container, .footer {
@@ -39,18 +39,18 @@
 </head>
 
 <body>
-    <!-- 顶部导航与团队背书 -->
+    <!-- 顶部导航与团队背书 (无天平，第一行单行化展示) -->
     <header class="header">
         <div class="header-inner">
             <div class="logo">
-                <span class="logo-icon">⚖️</span>
                 <div class="logo-text">
-                    <h1>反垄断数据库</h1>
-                    <p class="subtitle">海华永泰 · 陈元熹律师</p>
+                    <h1 class="logo-title">反垄断数据库</h1>
+                    <span class="logo-divider">|</span>
+                    <span class="logo-sub">海华永泰 · 陈元熹律师</span>
                 </div>
             </div>
             <div class="header-badge">
-                <span class="lawyer-tag">海华永泰合规与反垄断业务团队</span>
+                <span class="lawyer-tag">合规与反垄断业务团队</span>
             </div>
         </div>
     </header>
@@ -140,11 +140,10 @@
         <!-- 5. 分页器 -->
         <div class="pagination" id="pagination"></div>
 
-        <!-- 6. 业务咨询与专业合作 Banner -->
+        <!-- 6. 业务咨询与专业合作 Banner (重构：无天平，邮箱不拉伸，微信改写个人公众号) -->
         <section class="upsell-banner" id="contact-banner">
             <div class="upsell-content">
-                <span class="upsell-icon">⚖️</span>
-                <h3>海华永泰律师事务所 · 陈元熹律师团队</h3>
+                <h3 class="team-title">海华永泰律师事务所 · 陈元熹律师团队</h3>
                 <p class="upsell-tagline">专业专注：反垄断审查申报 · 经营者集中合规 · 竞争合规体系搭建 · 反垄断调查与诉讼代理</p>
                 
                 <div class="contact-channels">
@@ -155,26 +154,26 @@
                             <span class="channel-title">业务咨询邮箱</span>
                         </div>
                         <div class="channel-card-body">
-                            <img src="email.png?v=20261119" alt="yuanxi@hiwayslaw.com" class="email-img">
-                            <span class="email-action-hint">点击发送邮件咨询 ↗</span>
+                            <img src="email.png?v=20261120" alt="yuanxi@hiwayslaw.com" class="email-img">
                         </div>
-                        <div class="channel-card-footer">
-                            <span class="shield-badge">🛡️ 已启用防爬虫安全防护</span>
+                        <div class="email-action-row">
+                            <span class="email-action-hint">点击发送邮件咨询 ↗</span>
                         </div>
                     </div>
 
                     <!-- 微信公众号二维码卡片 -->
                     <div class="contact-channel-card wechat-channel-card" id="wechat-qr-card">
                         <div class="wechat-qr-box">
-                            <img src="wechat-qr.jpg?v=20261119" alt="陈元熹律师微信公众号二维码" class="wechat-qr-img">
+                            <img src="wechat-qr.jpg?v=20261120" alt="陈元熹律师个人公众号二维码" class="wechat-qr-img">
                         </div>
                         <div class="wechat-info">
                             <div class="channel-card-header">
                                 <span class="channel-icon">📱</span>
-                                <span class="channel-title">官方微信公众号</span>
+                                <span class="channel-title">扫码关注</span>
                             </div>
-                            <p class="wechat-desc">扫码关注 <strong>陈元熹律师团队</strong></p>
-                            <span class="wechat-hint">微信扫一扫 · 获取反垄断前沿资讯与案例合规解读</span>
+                            <p class="wechat-desc"><strong>陈元熹律师个人公众号</strong></p>
+                            <span class="wechat-hint">微信扫一扫 · 手机长按识别</span>
+                            <span class="wechat-subhint">反垄断合规实务与案例解读</span>
                         </div>
                     </div>
                 </div>
