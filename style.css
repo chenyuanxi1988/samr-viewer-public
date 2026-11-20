@@ -1,6 +1,6 @@
 /* ==========================================================================
    SAMR Public Viewer — Responsive White & Indigo Design
-   反垄断数据库 | 海华永泰 陈元熹律师团队
+   反垄断数据库 | 陈元熹律师
    ========================================================================== */
 
 :root {
@@ -127,6 +127,18 @@ body {
 .header-badge {
     display: flex;
     align-items: center;
+}
+
+.header-practice-areas {
+    font-size: 0.775rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    text-align: right;
+}
+
+.header-practice-areas .practice-label {
+    color: var(--accent-blue);
+    font-weight: 600;
 }
 
 .lawyer-tag {

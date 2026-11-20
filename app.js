@@ -1,7 +1,7 @@
 /**
  * SAMR Public Viewer — Frontend Logic
  * ====================================
- * 反垄断数据库 | 海华永泰 陈元熹律师团队
+ * 反垄断数据库 | 陈元熹律师
  * Pure vanilla JS. Loads public_data.json + stats.json,
  * renders a responsive case list with client-side
  * search, filter, sorting, province chips, and pagination.
@@ -464,7 +464,7 @@
         $emailBtn.addEventListener("click", () => {
             const u = "yuanxi";
             const d = "hiwayslaw.com";
-            window.location.href = `mailto:${u}@${d}?subject=${encodeURIComponent("反垄断业务咨询 - 陈元熹律师团队")}`;
+            window.location.href = `mailto:${u}@${d}?subject=${encodeURIComponent("反垄断业务咨询 - 陈元熹律师")}`;
         });
     }
 
