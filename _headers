@@ -1,0 +1,64 @@
+# Cloudflare Pages Headers Configuration
+# Domain: samr.yuanxi.net
+
+# Global Security & Encoding
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Static HTML Pages & SSG Matrix
+/*.html
+  Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
+  Content-Type: text/html; charset=utf-8
+
+/cases/*.html
+  Cache-Control: public, max-age=86400, s-maxage=604800, stale-while-revalidate=2592000
+  Content-Type: text/html; charset=utf-8
+
+/provinces/*.html
+  Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
+  Content-Type: text/html; charset=utf-8
+
+/categories/*.html
+  Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
+  Content-Type: text/html; charset=utf-8
+
+# Public JSON API Endpoints (CORS Enabled)
+/data/*.json
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+  Cache-Control: public, max-age=1800, s-maxage=3600, stale-while-revalidate=86400
+  Content-Type: application/json; charset=utf-8
+
+# Protocols
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400
+
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8
+  Cache-Control: public, max-age=86400
+
+# Static Images & CSS/JS
+/*.css
+  Cache-Control: public, max-age=86400, s-maxage=604800, stale-while-revalidate=2592000
+
+/*.js
+  Cache-Control: public, max-age=86400, s-maxage=604800, stale-while-revalidate=2592000
+
+/*.png
+  Cache-Control: public, max-age=604800, s-maxage=2592000
+
+/*.jpg
+  Cache-Control: public, max-age=604800, s-maxage=2592000

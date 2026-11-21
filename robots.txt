@@ -1,0 +1,47 @@
+# robots.txt for SAMR Antitrust Database (samr.yuanxi.net)
+# Maintained by Attorney Chen Yuanxi (陈元熹律师)
+
+User-agent: *
+Allow: /
+Disallow: /downloads/
+
+# Explicitly welcome major AI search engines and research crawlers
+User-agent: Bytespider
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Traditional Search Engines
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Sogouspider
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# Sitemaps
+Sitemap: https://samr.yuanxi.net/sitemap.xml

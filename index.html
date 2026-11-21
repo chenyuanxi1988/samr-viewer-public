@@ -6,7 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="反垄断数据库 — 陈元熹律师倾力打造，全量收录国家市场监督管理总局及各省市反垄断执法、简易案件、行政处罚信息">
     <meta name="format-detection" content="telephone=no">
+    <link rel="canonical" href="https://samr.yuanxi.net/">
     <title>反垄断数据库 | 陈元熹律师</title>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://samr.yuanxi.net/#website",
+          "url": "https://samr.yuanxi.net/",
+          "name": "SAMR 反垄断案件数据库",
+          "description": "由陈元熹律师维护的中国反垄断执法全量开源智库与合规实务检索平台，收录5,939篇全国反垄断案件。",
+          "publisher": {
+            "@type": "Attorney",
+            "@id": "https://samr.yuanxi.net/#attorney",
+            "name": "陈元熹律师",
+            "url": "https://samr.yuanxi.net",
+            "email": "yuanxi@hiwayslaw.com",
+            "knowsAbout": [
+              "中国企业出海及其他跨境投融资",
+              "商业秘密侵权诉讼",
+              "反垄断经营者集中申报",
+              "竞争合规体系搭建",
+              "反垄断调查应对与行政救济"
+            ]
+          }
+        },
+        {
+          "@type": "Dataset",
+          "@id": "https://samr.yuanxi.net/#dataset",
+          "name": "国家市场监督管理总局及受托省局反垄断执法案件全量数据集",
+          "description": "涵盖中国反垄断执法历年简易案件、行政处罚决定书（100%正文与附件归档）及附条件批准案件的权威开源数据集合。",
+          "url": "https://samr.yuanxi.net/",
+          "temporalCoverage": "2013/2026",
+          "spatialCoverage": "China",
+          "creator": {
+            "@id": "https://samr.yuanxi.net/#attorney"
+          }
+        }
+      ]
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -81,7 +122,10 @@
                     <span class="metric-val cat-ftj" id="stat-ftj">—</span>
                     <span class="metric-name">附条件批准</span>
                 </div>
-                <div class="metric-updated">数据更新于 <span id="stat-updated">—</span></div>
+                <div class="metric-updated">
+                    数据更新于 <span id="stat-updated">—</span>
+                    <a href="insights.html" style="margin-left: 12px; font-size: 0.82rem; color: var(--accent-blue); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 3px;">📊 执法数据洞察 ↗</a>
+                </div>
             </div>
 
             <!-- 2. 省份紧凑胶囊快速筛选 (横向紧凑微徽章，秒级直达过滤) -->
@@ -187,8 +231,14 @@
 
     <!-- 底栏 -->
     <footer class="footer">
-        <p>数据来源：国家市场监督管理总局及各省级市场监管局公开信息</p>
-        <p class="footer-disclaimer">反垄断数据库 · 陈元熹律师版权所有 | 本工具仅供学术及反垄断合规研究参考</p>
+        <p style="margin-bottom: 6px;">
+            <a href="index.html" style="color: var(--accent-blue); text-decoration: none;">首页检索</a> · 
+            <a href="insights.html" style="color: var(--accent-blue); text-decoration: none;">执法数据洞察</a> · 
+            <a href="sitemap.xml" style="color: var(--accent-blue); text-decoration: none;">站点地图</a> · 
+            <a href="llms.txt" style="color: var(--accent-blue); text-decoration: none;">AI 知识协议 (llms.txt)</a>
+        </p>
+        <p>数据来源：国家市场监督管理总局及各省级市场监管局官方公开专栏</p>
+        <p class="footer-disclaimer">反垄断数据库 · 陈元熹律师版权所有 | 本工具仅供学术及反垄断合规实务研究参考</p>
     </footer>
 
     <script src="app.js?v=20261119_v2"></script>
